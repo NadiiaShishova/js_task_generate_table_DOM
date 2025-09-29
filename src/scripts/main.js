@@ -1,52 +1,30 @@
-import people from './people.json';
+'use strict';
+
+import people from './lib/people.json';
 
 document.addEventListener('DOMContentLoaded', () => {
-  const table = document.querySelector('.dashboard');
+  renderTable(people);
+});
 
-  if (!table) {
-    return;
-  }
+function renderTable(data) {
+  const tbody = document.querySelector('tbody');
 
-  const headers = ['Name', 'Gender', 'Born', 'Died', 'Age', 'Century'];
-  const thead = document.createElement('thead');
-  const headerRow = document.createElement('tr');
-
-  headers.forEach((title) => {
-    const th = document.createElement('th');
-
-    th.textContent = title;
-    headerRow.appendChild(th);
-  });
-
-  thead.appendChild(headerRow);
-  table.appendChild(thead);
-
-  const tbody = document.createElement('tbody');
-
-  people.forEach(({ name: personName, sex, born, died }) => {
+  data.forEach((person) => {
     const row = document.createElement('tr');
 
-    const age = died - born;
-    const century = Math.ceil(died / 100);
+    const age = person.died - person.born;
+    const century = Math.ceil(person.died / 100);
+    const sex = person.sex === 'm' ? 'Male' : 'Female';
 
-    const cells = [
-      personName,
-      sex === 'm' ? 'Male' : 'Female',
-      born,
-      died,
-      age,
-      century,
-    ];
-
-    cells.forEach((value) => {
-      const td = document.createElement('td');
-
-      td.textContent = value;
-      row.appendChild(td);
-    });
+    row.innerHTML = `
+      <td>${person.name}</td>
+      <td>${person.born}</td>
+      <td>${person.died}</td>
+      <td>${age}</td>
+      <td>${century}</td>
+      <td>${sex}</td>
+    `;
 
     tbody.appendChild(row);
   });
-
-  table.appendChild(tbody);
-});
+}
